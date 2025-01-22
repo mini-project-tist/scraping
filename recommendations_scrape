@@ -1,0 +1,45 @@
+from serpapi import GoogleSearch
+
+# Replace with your actual SerpAPI key
+SERPAPI_KEY = "---------------------------------------"
+
+def main():
+    # Get input from the user
+    device = input("Enter the device (e.g., bulb): ").strip()
+    wattage = input("Enter the wattage (e.g., 10 watts): ").strip()
+
+    if not device or not wattage:
+        print("Error: Both device and wattage are required!")
+        return
+
+    # Construct the query
+    query = f"{device} {wattage}"
+    print(f"Searching for: {query}")
+
+    # Set up SerpAPI parameters
+    params = {
+        "engine": "google_shopping",
+        "q": query,
+        "location": "Austin, Texas, United States",
+        "hl": "en",
+        "gl": "us",
+        "num": 3,
+        "api_key": SERPAPI_KEY,
+    }
+
+    # Perform the search
+    search = GoogleSearch(params)
+    results = search.get_dict()
+    shopping_results = results.get("shopping_results", [])
+
+    if not shopping_results:
+        print("No results found.")
+        return
+
+    # Display the results
+    print("\nSearch Results:")
+    for item in shopping_results[:3]:
+        print(f"- {item.get('title', 'N/A')} for {item.get('price', 'N/A')}")
+
+if __name__ == "__main__":
+    main()
